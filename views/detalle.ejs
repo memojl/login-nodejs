@@ -1,0 +1,90 @@
+<%- include("template/head", {tituloWeb:'Detalle de mascota'}) %>
+<%- include("template/navbar") %>
+<div class="container">
+    <H1>Editar Mascota </H1>
+    <% if(!error){ %>
+        <form id="editar" data-id="<%= mascota.id %>">
+            <input 
+                type="text"
+                value="<%= mascota.nombre %>"
+                class="form-control my-2"
+                name="nombre"
+                id="nombreInput"
+            >
+            <input 
+                type="text"
+                value="<%= mascota.descripcion %>"
+                class="form-control my-2"
+                name="descripcion"
+                id="descripcionInput"
+            >
+            <button
+                class="btn btn-warning"
+                type="submit"
+            >
+                Editar
+            </button> | <a href="/mascotas" class="btn btn-dark">Cancelar</a>
+        </form>
+    <% }else{ %>
+        <p>
+            <%= mensaje %> 
+        </p>
+        <a href="/mascotas" class="btn btn-dark">Cancelar</a>
+    <% } %>
+    
+</div>
+<%- include("template/footer") %>
+<script>
+//Formulario Editar
+const formEditar = document.querySelector('#editar');
+
+formEditar.addEventListener('submit', async(e) => {
+    e.preventDefault()
+    // Alternativa #1 (capturar input)
+    const nombre = formEditar.elements['nombre'].value
+    // Alternativa #2 (capturar input)
+    const descripcion = document.querySelector('#descripcionInput').value
+    const id = formEditar.dataset.id 
+
+    const data = await fetch(`/mascotas/${id}`, {
+        method: 'PUT',
+        headers: {
+        'Content-Type': 'application/json'
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify({nombre, descripcion})
+    })
+
+    const res = await data.json()
+
+    if(res.estado){
+        window.location.href = '/mascotas'
+    }else{
+        console.log(res)
+    }
+
+});
+
+//Eliminar
+/*
+  const btnEliminar = document.querySelector('.btn-danger')
+  btnEliminar.addEventListener('click', async() => {
+    console.log(btnEliminar.dataset.id)  
+    try {
+        // https://developer.mozilla.org/es/docs/Web/API/HTMLElement/dataset
+        const data = await fetch(`/mascotas/${btnEliminar.dataset.id}`, {
+          method: 'delete'
+        })
+        const res = await data.json()
+        console.log(res)
+        if(res.estado){
+            window.location.href = '/mascotas'
+        }else{
+            console.log(res)
+        }
+    } catch (error) {
+        console.log(error)
+    }
+  });*/
+
+</script>

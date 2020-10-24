@@ -1,0 +1,14 @@
+body{
+   margin:0;
+}
+
+.pad{
+   padding-top: 35px;
+   padding-bottom: 35px;
+}
+.pad-top{
+   padding-top: 35px;
+}
+.pad-bottom{
+   padding-bottom: 35px;
+}

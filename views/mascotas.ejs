@@ -1,0 +1,67 @@
+<%- include("template/head", {tituloWeb:' Mascotas'}) %>
+<%- include("template/navbar") %>
+<div class="container">
+    <h1>Crud Mongo</h1>
+    <div>
+      <a class="btn btn-success" href="/mascotas/crear">Crear nueva Mascota</a>
+    </div>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Descripcion</th>
+            <th scope="col">Accion</th>
+          </tr>
+        </thead>
+        <tbody>
+  
+    <% if (arrayMascotas.length > 0) { %>
+        <% arrayMascotas.forEach(mascota => { %>
+
+                  <tr id="<%= mascota.id %>">
+                    <th scope="row"><%= mascota.id %></th>
+                    <td><%= mascota.nombre %></td>
+                    <td><%= mascota.descripcion %></td>
+                    <td><a href="/mascotas/<%= mascota.id %>" class="btn btn-primary">Editar</a> | <button class="btn btn-danger" data-id="<%= mascota.id %>">Borrar</button></td>
+                  </tr>
+
+        <% }) %>
+    <% } %>
+        </tbody>
+    </table>
+</div>
+<%- include("template/footer") %>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.14.4/dist/sweetalert2.all.min.js"></script>
+<script>
+  $(document).on('click', '.btn-danger', function () {
+    const element = $(this)[0].parentElement.parentElement;const id = $(element).attr('id');
+    console.log(id);
+    Swal.fire({
+    title: '¿Está seguro de eliminar el registro ('+id+')?',
+    text: "¡Está operación no se puede revertir!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Borrar'
+    }).then((result) => {
+      if (result.value) {
+        //let id = $(this).closest('tr').attr('id'); //capturamos el atributo ID de la fila  
+        const data = fetch(`/mascotas/${id}`, {
+          method: 'delete'
+        });
+        //const res = await data.json();//console.log(res);
+        if(data){
+            window.location.href = '/mascotas'
+            console.log('El registro ha sido eliminado')
+        }else{
+            console.log('El registro No existe')
+        }
+        //refTable1.child(productoId).remove(); //eliminamos el producto de firebase      
+        Swal.fire('¡Eliminado!', 'El registro ha sido eliminado.','success')
+      }
+    })        
+ });
+</script>
